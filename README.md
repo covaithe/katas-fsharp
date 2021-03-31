@@ -1,10 +1,21 @@
 
 == Greg's katas in F# ==
 
-This repo is to store various kata implementations in F#. 
-I'm pretty new to it (as of early 2021) but have some experience
-with functional programming in other languages, so we'll see
-how this goes. 
+This repo is to store various kata implementations in F#.
 
-Most of the actual implementations live on branches, which won't
-ever be merged into main. 
+This branch is the starting point for working on the word search kata from here:
+https://github.com/PillarTechnology/kata-word-search
+
+It has a failing acceptance test.
+
+To run the tests, do this:
+
+```
+dotnet test
+```
+
+or, if you prefer to run the tests continuously:
+
+```
+dotnet watch test --project WordSearch.Tests
+```
