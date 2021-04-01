@@ -45,3 +45,55 @@ module Tests
 
         Assert.Equal(expected, answer)
 
+    [<Fact>]
+    let ``parse should return a list of cells``() =
+        let puzzle = dedent """
+            a,b
+            c,d
+        """
+        let expectedCells = [
+            {x=0; y=0; letter="a"}
+            {x=1; y=0; letter="b"}
+            {x=0; y=1; letter="c"}
+            {x=1; y=1; letter="d"}
+        ]
+
+        Assert.Equal<Cell list>(expectedCells, parse puzzle)
+
+    // [<Trait("Category","wtf")>]
+    [<Fact>]
+    let ``find should return the location where it found a word``() =
+        let cells = parse "a,b,c"
+        Assert.Equal("(1,0)", find cells "b")
+
+    [<Fact>]
+    let ``find should be able to find longer words``() =
+        let cells = parse "a,b,c,d"
+        Assert.Equal("(1,0),(2,0)", find cells "bc")
+
+    [<Fact>]
+    let ``find should find words on any line``() =
+        let cells = parse "a,b\nc,d"
+        Assert.Equal("(0,1)", find cells "c")
+
+    [<Fact>]
+    let ``find should find words starting anywhere``()=
+        let cells = parse "a,b,c,c,c,c,d"
+        Assert.Equal("(5,0),(6,0)", find cells "cd")
+
+    [<Theory>]
+    [<InlineData("c1", "(1,1),(0,0)")>]
+    [<InlineData("c2", "(1,1),(1,0)")>]
+    [<InlineData("c3", "(1,1),(2,0)")>]
+    [<InlineData("c4", "(1,1),(0,1)")>]
+    [<InlineData("c5", "(1,1),(2,1)")>]
+    [<InlineData("c6", "(1,1),(0,2)")>]
+    [<InlineData("c7", "(1,1),(1,2)")>]
+    [<InlineData("c8", "(1,1),(2,2)")>]
+    let ``find should look in any direction``(word, path) =
+        let cells = parse(dedent """
+            1,2,3
+            4,c,5
+            6,7,8
+        """)
+        Assert.Equal(path, find cells word)
