@@ -45,3 +45,57 @@ module Tests
 
         Assert.Equal(expected, answer)
 
+    [<Fact>]
+    let ``parse should return a sequence of cells``() =
+        let input = dedent """
+            a,b
+            c,d
+        """
+        let expectedCells = [
+            {x=0; y=0; letter='a'}
+            {x=1; y=0; letter='b'}
+            {x=0; y=1; letter='c'}
+            {x=1; y=1; letter='d'}
+        ]
+        Assert.Equal(expectedCells, parse input)
+
+    [<Fact>]
+    let ``find should show the locations of the cells``() =
+        let cells = parse "a,b,c,d"
+        Assert.Equal("(1,0)", find cells "b")
+
+    [<Fact>]
+    let ``find should locate longer words``() =
+        let cells = parse "a,b,c,d"
+        Assert.Equal("(1,0),(2,0)", find cells "bc")
+
+    [<Fact>]
+    let ``find should work on any row``() =
+        let cells = parse "a,b\nc,d"
+        Assert.Equal("(0,1)", find cells "c")
+
+    [<Fact>]
+    let ``find should locate words from any matching cell``() =
+        let cells = parse "a,b,b,b,b,c,d"
+        Assert.Equal("(4,0),(5,0)", find cells "bc")
+
+    [<Theory>]
+    [<InlineData("c1", "(1,1),(0,0)")>]
+    [<InlineData("c2", "(1,1),(1,0)")>]
+    [<InlineData("c3", "(1,1),(2,0)")>]
+    [<InlineData("c4", "(1,1),(0,1)")>]
+    [<InlineData("c5", "(1,1),(2,1)")>]
+    [<InlineData("c6", "(1,1),(0,2)")>]
+    [<InlineData("c7", "(1,1),(1,2)")>]
+    [<InlineData("c8", "(1,1),(2,2)")>]
+    let ``find should work in all directions`` word answer =
+        let input = dedent """
+            1,2,3
+            4,c,5
+            6,7,8
+        """
+        let cells = parse input
+        Assert.Equal(answer, find cells word)
+
+
+
