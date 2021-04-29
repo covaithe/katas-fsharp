@@ -11,6 +11,8 @@ module Tests
         |> Array.filter (fun s -> not (String.IsNullOrEmpty(s)))
         |> (fun strings -> String.Join('\n', strings))
 
+    // [<Trait("Category", "wtf")>]
+
     [<Fact>]
     let ``solve should print the solution`` () =
         let input = dedent """
@@ -45,3 +47,53 @@ module Tests
 
         Assert.Equal(expected, answer)
 
+    [<Fact>]
+    let ``parse should extract a list of cells``() =
+        let input = dedent """
+            a,b
+            c,d
+        """
+        let cells = parse input
+        let expectedCells = [
+            {letter='a'; x=0; y=0}
+            {letter='b'; x=1; y=0}
+            {letter='c'; x=0; y=1}
+            {letter='d'; x=1; y=1}
+        ]
+        Assert.Equal<Cell seq>(expectedCells, cells)
+
+    [<Fact>]
+    let ``finding words returns their path``() =
+        let cells = parse "a,b,c"
+        let path = find cells "bc"
+        Assert.Equal("(1,0),(2,0)", path)
+
+    [<Fact>]
+    let ``can find words on any line``() =
+        let cells = parse (dedent """
+            a,b
+            c,d
+        """)
+        Assert.Equal("(1,1)", find cells "d")
+
+    [<Fact>]
+    let ``can find words starting with any cell matching first char``() =
+        let cells = parse "a,b,b,b,c"
+        Assert.Equal("(3,0),(4,0)", find cells "bc")
+
+    [<Theory>]
+    [<InlineData("c1", "(1,1),(0,0)")>]
+    [<InlineData("c2", "(1,1),(1,0)")>]
+    [<InlineData("c3", "(1,1),(2,0)")>]
+    [<InlineData("c4", "(1,1),(0,1)")>]
+    [<InlineData("c5", "(1,1),(2,1)")>]
+    [<InlineData("c6", "(1,1),(0,2)")>]
+    [<InlineData("c7", "(1,1),(1,2)")>]
+    [<InlineData("c8", "(1,1),(2,2)")>]
+    let ``can find words in any direction`` word path =
+        let cells = parse (dedent """
+            1,2,3
+            4,c,5
+            6,7,8
+        """)
+        Assert.Equal(path, find cells word)
