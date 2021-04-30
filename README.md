@@ -1,5 +1,5 @@
 
-== Greg's katas in F# ==
+## Greg's katas in F#
 
 This repo is to store various kata implementations in F#.
 
@@ -19,3 +19,13 @@ or, if you prefer to run the tests continuously:
 ```
 dotnet watch test --project WordSearch.Tests
 ```
+
+## kata start date goes here
+
+### Plans
+
+A space to talk about any plans or goals for this kata implementation
+
+### Reflections
+
+A space for post-kata reflection

@@ -11,6 +11,11 @@ module Tests
         |> Array.filter (fun s -> not (String.IsNullOrEmpty(s)))
         |> (fun strings -> String.Join('\n', strings))
 
+    // As far as I can tell, the simplest way to run just a single
+    // test in xunit is to add this attribute to the test, and then
+    // run `dotnet run --filter Category=wtf`
+    // [<Trait("Category", "wtf")>]
+
     [<Fact>]
     let ``solve should print the solution`` () =
         let input = dedent """
