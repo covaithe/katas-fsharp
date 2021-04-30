@@ -24,8 +24,10 @@ dotnet watch test --project WordSearch.Tests
 
 ### Plans
 
-A space to talk about any plans or goals for this kata implementation
+Going for smoothness and easy flow from step to step in this version. Ideally I'd like to get it done without any struggling.
 
 ### Reflections
 
-A space for post-kata reflection
+Not bad. I got through the whole thing in about 45 minutes, not rushing, while half paying attention to a meeting. I did make one small mistake, concating the cell sequences at the wrong time. In candidatesAt after line 59; it ought to be at the end of line 61. This is a mistake I've made several times in the past, and in the past it took some difficult debugging. Today I remembered that this is one of the things that can go wrong at this step, and was able to find it by thinking about the type signatures of the inner functions. I wonder if F# has type aliases? if `seq<Cell>` had a friendly name, e.g. Candidate, it might be easier to understand this.
+
+Also, I badly need some editor templates to build the tests for me. They're tricky and annoying to build by hand.
