@@ -9,7 +9,7 @@ module Tests
         |> (fun s -> s.Split("\n"))
         |> Array.map (fun s -> s.Trim())
         |> Array.filter (fun s -> not (String.IsNullOrEmpty(s)))
-        |> (fun strings -> String.Join('\n', strings))
+        |> String.concat "\n"
 
     // As far as I can tell, the simplest way to run just a single
     // test in xunit is to add this attribute to the test, and then
