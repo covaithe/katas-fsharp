@@ -20,12 +20,16 @@ or, if you prefer to run the tests continuously:
 dotnet watch test --project WordSearch.Tests
 ```
 
-## kata start date goes here
+## 2021-05-03
 
 ### Plans
 
-A space to talk about any plans or goals for this kata implementation
+Not sure of specific plans. Maybe look into some snippets to facilitate easier test writing / assertions?
 
 ### Reflections
 
-A space for post-kata reflection
+building the snippets was gratifyingly easy and quick in VS code. I need to do that more.
+
+Kata was pretty decent. At the step of adding directions, I tried to refactor to make it smoother rather than just adding them in a sorta-big step. That was harder but I think it's worth doing more. I got interrupted halfway, which didn't help.
+
+Another thing I think would help me be smoother is learning more navigation commands for VS code, like being able to move between splits more easily.
