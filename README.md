@@ -24,8 +24,12 @@ dotnet watch test --project WordSearch.Tests
 
 ### Plans
 
-A space to talk about any plans or goals for this kata implementation
+I had a thought last time to make find return the answer more in the form of the expected output. Probably not much different but worth at try?
 
 ### Reflections
 
-A space for post-kata reflection
+Kata as a whole is going nicely. Feels smooth and pretty clean. I'd like it to be a little faster but probably not worth pushing too hard. I'm down to about 30 minutes now, and going much faster will probably involve cutting some corners.
+
+Definitely need more practice at carefully refactoring towards directions. I think it's a good approach, but it's a bit challenging to do cleanly.
+
+Not sure about including the word in the output from find. It does clean up the solve method at the end, but it clutters up the tests. Maybe an intermediate function that wraps find with a formatter? but then I'd be tempted to inline that back into the solve function....
