@@ -20,12 +20,15 @@ or, if you prefer to run the tests continuously:
 dotnet watch test --project WordSearch.Tests
 ```
 
-## kata start date goes here
+## 2021-05-10
 
 ### Plans
 
-A space to talk about any plans or goals for this kata implementation
+Not sure. Last time I did a thing with including the full problem output as the find fn's return value, e.g "SULU: (1,1),(2,2)" etc. I'm not sure I liked that. It made the tests more cumbersome to write, and made it feel like the solution was too artificially constrained to this problem. I wouldn't write a real-world software package like that; I'd return data and allow the presentation layer to format the data in the desired way.
+
+So maybe this time I return data (Cell seq) from the thing, and look for ways to make the tests work nicely with that? Sure, why not.
+
 
 ### Reflections
 
-A space for post-kata reflection
+Didn't finish, and several days have passed since I worked on it, but... I remember the approach working nicely. I built toWord, toPath, and toAnswer methods early, and used them freely in the tests. I think I liked the results.

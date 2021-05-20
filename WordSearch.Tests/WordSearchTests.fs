@@ -16,7 +16,7 @@ module Tests
     // run `dotnet run --filter Category=wtf`
     // [<Trait("Category", "wtf")>]
 
-    [<Fact>]
+    [<Fact(Skip="later")>]
     let ``solve should print the solution`` () =
         let input = dedent """
             BONES,KHAN,KIRK,SCOTTY,SPOCK,SULU,UHURA
@@ -50,3 +50,72 @@ module Tests
 
         Assert.Equal(expected, answer)
 
+    [<Fact>]
+    let ``parse should extract a list of cells``() =
+        let input = dedent """
+            a,b
+            c,d
+        """
+        let expectedCells = [
+            {letter='a'; x=0; y=0;}
+            {letter='b'; x=1; y=0;}
+            {letter='c'; x=0; y=1;}
+            {letter='d'; x=1; y=1;}
+        ]
+
+        Assert.Equal(expectedCells, parse input)
+
+    [<Fact>]
+    let ``toWord should concat the letters of a path``() =
+        let path = [
+            {letter='a'; x=0; y=0;}
+            {letter='b'; x=1; y=0;}
+            {letter='c'; x=0; y=1;}
+        ]
+        Assert.Equal("abc", toWord path)
+
+    [<Fact>]
+    let ``toAnswer should print the word and locations of a path``() =
+        let path = [
+            {letter='a'; x=0; y=0;}
+            {letter='b'; x=1; y=0;}
+            {letter='c'; x=0; y=1;}
+        ]
+        Assert.Equal("abc: (0,0),(1,0),(0,1)", toAnswer path)
+
+    [<Fact>]
+    let ``find should return the path for the word``() =
+        let cells = parse "a,b,c,d"
+        Assert.Equal("b: (1,0)", find cells "b" |> toAnswer)
+
+    [<Fact>]
+    let ``find should locate words of any length``() =
+        let cells = parse "a,b,c,d,e"
+        Assert.Equal("bcd", find cells "bcd" |> toWord)
+
+    [<Fact>]
+    let ``find should get words on any line``() =
+        let cells = parse "a,b\nc,d"
+        Assert.Equal("(0,1)", find cells "c" |> toPathLocation)
+
+    [<Fact>]
+    let ``find should get words starting from any matching cell``() =
+        let cells = parse "a,b,b,b,c"
+        Assert.Equal("(3,0),(4,0)", find cells "bc" |> toPathLocation)
+
+    [<Theory>]
+    [<InlineData("c1")>]
+    [<InlineData("c2")>]
+    [<InlineData("c3")>]
+    [<InlineData("c4")>]
+    [<InlineData("c5")>]
+    [<InlineData("c6")>]
+    [<InlineData("c7")>]
+    [<InlineData("c8")>]
+    let ``find should find words in any direction`` word =
+        let cells = parse (dedent """
+            1,2,3
+            4,c,5
+            6,7,8
+        """)
+        Assert.Equal(word, find cells word |> toWord)
