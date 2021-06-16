@@ -50,3 +50,80 @@ module Tests
 
         Assert.Equal(expected, answer)
 
+    [<Fact>]
+    let ``parse should produce a sequence of Cells``() =
+        let input = dedent """
+            a,b
+            c,d
+        """
+        let expectedCells = [
+            {letter='a'; x=0; y=0}
+            {letter='b'; x=1; y=0}
+            {letter='c'; x=0; y=1}
+            {letter='d'; x=1; y=1}
+        ]
+        Assert.Equal(expectedCells, parse input)
+
+    [<Fact>]
+    let ``toWord should get the chars from cells``() =
+        let cells = [
+            {letter='a'; x=0; y=0}
+            {letter='b'; x=1; y=0}
+            {letter='c'; x=0; y=1}
+        ]
+        Assert.Equal("abc", toWord cells)
+
+    [<Fact>]
+    let ``toPath should produce the locations of each cell``() =
+        let cells = [
+            {letter='a'; x=0; y=0}
+            {letter='b'; x=1; y=0}
+            {letter='c'; x=0; y=1}
+        ]
+        Assert.Equal("(0,0),(1,0),(0,1)", toPath cells)
+
+    [<Fact>]
+    let ``find should produce the cells that spell the word``() =
+        let cells = parse "a,b,c,d"
+        let answer = Seq.ofList ([
+            {letter='b';x=1;y=0}
+            {letter='c';x=2;y=0}
+        ])
+        Assert.Equal<Cell seq>(answer, find cells "bc")
+
+    [<Fact>]
+    let ``find should locate words of any length``() =
+        let cells = parse "a,b,c,d,e"
+        Assert.Equal("bcd", find cells "bcd" |> toWord)
+
+    [<Fact>]
+    let ``find should locate words starting on any line``() =
+        let cells = parse "a,b\nc,d"
+        Assert.Equal("cd", find cells "cd" |> toWord)
+
+    [<Fact>]
+    let ``find should locate words starting from any cell matching first char``() =
+        let cells = parse "a,b,b,b,c"
+        Assert.Equal("(3,0),(4,0)", find cells "bc" |> toPath)
+
+    [<Theory>]
+    [<InlineData("c1")>]
+    [<InlineData("c2")>]
+    [<InlineData("c3")>]
+    [<InlineData("c4")>]
+    [<InlineData("c5")>]
+    [<InlineData("c6")>]
+    [<InlineData("c7")>]
+    [<InlineData("c8")>]
+    let ``find should locate words in any direction`` word =
+        let cells = parse (dedent """
+            1,2,3
+            4,c,5
+            6,7,8
+        """)
+        Assert.Equal(word, find cells word |> toWord)
+
+    [<Fact>]
+    let ``findAnswer should find the word and format the result``() =
+        let cells = parse "a,b,c,d"
+        Assert.Equal("bc: (1,0),(2,0)", findAnswer cells "bc")
