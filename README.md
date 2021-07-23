@@ -20,12 +20,12 @@ or, if you prefer to run the tests continuously:
 dotnet watch test --project WordSearch.Tests
 ```
 
-## kata start date goes here
+## 2021-06-16
 
 ### Plans
 
-A space to talk about any plans or goals for this kata implementation
+Trying to focus on only taking the steps necessary to pass each test, and writing tests that will only drive the smallest next bit of functionality.
 
 ### Reflections
 
-A space for post-kata reflection
+I didn't finish this one. Got distracted and let it sit for over a month, and I have no idea what's going on now. Gonna start over.

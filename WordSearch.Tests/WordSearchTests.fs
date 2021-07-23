@@ -16,7 +16,7 @@ module Tests
     // run `dotnet run --filter Category=wtf`
     // [<Trait("Category", "wtf")>]
 
-    [<Fact>]
+    [<Fact(Skip="later")>]
     let ``solve should print the solution`` () =
         let input = dedent """
             BONES,KHAN,KIRK,SCOTTY,SPOCK,SULU,UHURA
@@ -49,4 +49,78 @@ module Tests
         """
 
         Assert.Equal(expected, answer)
+
+    [<Fact>]
+    let ``parse should return a list of cells with coordinates``() =
+        let input = dedent """
+            a,b
+            c,d
+        """
+        let expectedCells = [
+            {letter='a'; x=0; y=0;}
+            {letter='b'; x=1; y=0;}
+            {letter='c'; x=0; y=1;}
+            {letter='d'; x=1; y=1;}
+        ]
+        Assert.Equal(expectedCells, parse input)
+
+    [<Fact>]
+    let ``toWord should concat the letters from a list of cells``() =
+        let cells = [
+            {letter='a'; x=0; y=0;}
+            {letter='b'; x=1; y=0;}
+            {letter='c'; x=0; y=1;}
+        ]
+        Assert.Equal("abc", toWord cells)
+
+    [<Fact>]
+    let ``toPath should comma separate the coordinates of the cells``() =
+        let cells = [
+            {letter='a'; x=0; y=0;}
+            {letter='b'; x=1; y=0;}
+            {letter='c'; x=0; y=1;}
+        ]
+        Assert.Equal("(0,0),(1,0),(0,1)", toPath cells)
+
+    [<Fact>]
+    let ``toAnswer should return the word and path with a comma between``() =
+        let cells = [
+            {letter='a'; x=0; y=0;}
+            {letter='b'; x=1; y=0;}
+            {letter='c'; x=0; y=1;}
+        ]
+        Assert.Equal("abc: (0,0),(1,0),(0,1)", toAnswer cells)
+
+    [<Fact>]
+    let ``find should return a list of the cells making up the word``() =
+        let cells = parse "a,b,c"
+        let expectedCells = [
+            {letter='b'; x=1; y=0}
+            {letter='c'; x=2; y=0}
+        ]
+        Assert.Equal(expectedCells, find cells "bc")
+
+    [<Fact>]
+    let ``find should find words of any length``() =
+        let cells = parse "a,b,c,d,e"
+        Assert.Equal("bcd", find cells "bcd" |> toWord)
+
+    [<Fact>]
+    let ``find should find words starting on any line``() =
+        let cells = parse "a,b\nc,d"
+        Assert.Equal("cd", find cells "cd" |> toWord)
+
+    [<Fact>]
+    let ``find should find words starting from any cell matching the first char``() =
+        let cells = parse "a,b,b,b,c"
+        Assert.Equal("bc", find cells "bc" |> toWord)
+
+
+
+
+
+
+
+
+
 
