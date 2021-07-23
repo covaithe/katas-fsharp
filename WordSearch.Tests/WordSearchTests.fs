@@ -13,7 +13,7 @@ module Tests
 
     // As far as I can tell, the simplest way to run just a single
     // test in xunit is to add this attribute to the test, and then
-    // run `dotnet run --filter Category=wtf`
+    // run `dotnet test --filter Category=wtf`
     // [<Trait("Category", "wtf")>]
 
     [<Fact>]
@@ -49,4 +49,81 @@ module Tests
         """
 
         Assert.Equal(expected, answer)
+
+
+    [<Fact>]
+    let ``parse should get a list of cells``() =
+        let input = dedent """
+            a,b
+            c,d
+        """
+        let expectedCells = [
+            { x=0; y=0; letter='a' }
+            { x=1; y=0; letter='b' }
+            { x=0; y=1; letter='c' }
+            { x=1; y=1; letter='d' }
+        ]
+        Assert.Equal(expectedCells, parse input)
+
+    let someCells = [
+        { x=0; y=0; letter='a' }
+        { x=1; y=0; letter='b' }
+        { x=2; y=0; letter='c' }
+    ]
+
+    [<Fact>]
+    let ``toWord should convert a sequence to the word it spells``() =
+        Assert.Equal("abc", toWord someCells)
+
+    [<Fact>]
+    let ``toPath should write the coordinates for a sequence``() =
+        Assert.Equal("(0,0),(1,0),(2,0)", toPath someCells)
+
+    [<Fact>]
+    let ``toAnswer should format the sequence in the form the answer should go``() =
+        Assert.Equal("abc: (0,0),(1,0),(2,0)", toAnswer someCells)
+
+    [<Fact>]
+    let ``find should return the sequence of cells with the found word``() =
+        let puzzle = parse "a,b,c"
+        let expected = [
+            {x=1;y=0;letter='b'}
+            {x=2;y=0;letter='c'}
+        ]
+        Assert.Equal(expected, find puzzle "bc")
+
+    [<Fact>]
+    let ``find should handle words of any length``() =
+        let puzzle = parse "a,b,c,d,e"
+        Assert.Equal("bcde", find puzzle "bcde" |> toWord)
+
+    [<Fact>]
+    let ``find should handle words starting on any line``() =
+        let puzzle = parse "a,b,c\nd,e"
+        Assert.Equal("de", find puzzle "de" |> toWord)
+
+    [<Fact>]
+    let ``find should handle words starting from any matching start char``() =
+        let puzzle = parse "a,a,a,a,e"
+        Assert.Equal("(3,0),(4,0)", find puzzle "ae" |> toPath)
+
+    [<Theory>]
+    [<InlineData("c1")>]
+    [<InlineData("c2")>]
+    [<InlineData("c3")>]
+    [<InlineData("c4")>]
+    [<InlineData("c5")>]
+    [<InlineData("c6")>]
+    [<InlineData("c7")>]
+    [<InlineData("c8")>]
+    let ``find should handle words pointing every direction from the start`` word =
+        let puzzle = parse (dedent """
+            1,2,3
+            4,c,5
+            6,7,8
+        """)
+        Assert.Equal(word, find puzzle word |> toWord)
+
+
+
 

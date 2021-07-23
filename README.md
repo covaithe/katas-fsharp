@@ -20,12 +20,17 @@ or, if you prefer to run the tests continuously:
 dotnet watch test --project WordSearch.Tests
 ```
 
-## kata start date goes here
+## 2021-07-23
 
 ### Plans
 
-A space to talk about any plans or goals for this kata implementation
+It's been a while, so I just want to see if I remember vaguely how to do this.
 
 ### Reflections
 
-A space for post-kata reflection
+Well, I do remember how to do this, pretty vaguely. Some experimentation was required.
+Ionide has updated and includes an F# linter by default now, which is a bit annoying, but
+did teach me about the existence of Seq.collect, which I do like.
+
+I still do sort of like this kata, and I'd like to get it polished to the point where I
+could record an implementation.
