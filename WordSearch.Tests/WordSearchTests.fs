@@ -8,7 +8,7 @@ module Tests
         s
         |> (fun s -> s.Split("\n"))
         |> Array.map (fun s -> s.Trim())
-        |> Array.filter (fun s -> not (String.IsNullOrEmpty(s)))
+        |> Array.filter (String.IsNullOrEmpty >> not)
         |> String.concat "\n"
 
     // As far as I can tell, the simplest way to run just a single
