@@ -50,3 +50,87 @@ module Tests
 
         Assert.Equal(expected, answer)
 
+    [<Fact>]
+    let ``parse should produce a seq of cells``() =
+        let input = dedent """
+            a,b
+            c,d
+        """
+        let expectedCells = [
+            { x=0; y=0; letter='a' }
+            { x=1; y=0; letter='b' }
+            { x=0; y=1; letter='c' }
+            { x=1; y=1; letter='d' }
+        ]
+        Assert.Equal(expectedCells, parse input)
+
+    let sampleSequence = [
+        { x=1; y=0; letter='a' }
+        { x=1; y=1; letter='b' }
+        { x=1; y=2; letter='c' }
+    ]
+
+    [<Fact>]
+    let ``toWord concats the letters of a sequence of cells``() =
+        Assert.Equal("abc", toWord sampleSequence)
+
+    [<Fact>]
+    let ``toPath shows the comma-separated coordinates of cells in the sequence``() =
+        Assert.Equal("(1,0),(1,1),(1,2)", toPath sampleSequence)
+
+    [<Fact>]
+    let ``toAnswer should format this sequence in the form of a puzzle answer``() =
+        Assert.Equal("abc: (1,0),(1,1),(1,2)", toAnswer sampleSequence)
+
+    [<Fact>]
+    let ``find should produce a sequence of cells for the given word``() =
+        let puzzle = parse "a,b,c"
+        let expectedCells = [
+            {x=0; y=0; letter='a';}
+            {x=1; y=0; letter='b';}
+        ]
+        Assert.Equal(expectedCells, find puzzle "ab")
+
+    [<Fact>]
+    let ``find should locate words anywhere within a line``() =
+        let puzzle = parse "a,b,c"
+        Assert.Equal("bc", find puzzle "bc" |> toWord)
+
+    [<Fact>]
+    let ``find should locate words of any length``() =
+        let puzzle = parse "a,b,c"
+        Assert.Equal("abc", find puzzle "abc" |> toWord)
+
+    [<Fact>]
+    let ``find should locate words on any line of the puzzle``() =
+        let puzzle = parse "a,b\nc,d"
+        Assert.Equal("cd", find puzzle "cd" |> toWord)
+
+    [<Fact>]
+    let ``find should match the full word``() =
+        let puzzle = parse "a,d,a,a,a,b"
+        Assert.Equal("ab", find puzzle "ab" |> toWord)
+
+    [<Theory>]
+    [<InlineData("c1")>]
+    [<InlineData("c2")>]
+    [<InlineData("c3")>]
+    [<InlineData("c4")>]
+    [<InlineData("c5")>]
+    [<InlineData("c6")>]
+    [<InlineData("c7")>]
+    [<InlineData("c8")>]
+    let ``find should locate words going in all directions`` word =
+        let puzzle = parse (dedent """
+            1,2,3
+            4,c,5
+            6,7,8
+        """)
+        Assert.Equal(word, find puzzle word |> toWord)
+
+
+
+
+
+
+
